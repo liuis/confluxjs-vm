@@ -1,200 +1,157 @@
-# SYNOPSIS
+[TOC]
 
-[![NPM Package](https://img.shields.io/npm/v/ethereumjs-vm.svg?style=flat-square)](https://www.npmjs.org/package/ethereumjs-vm)
-[![Actions Status](https://github.com/ethereumjs/ethereumjs-vm/workflows/vm-test/badge.svg)](https://github.com/ethereumjs/ethereumjs-vm/actions)
-[![Coverage Status](https://img.shields.io/coveralls/ethereumjs/ethereumjs-vm.svg?style=flat-square)](https://coveralls.io/r/ethereumjs/ethereumjs-vm)
-[![Gitter](https://img.shields.io/gitter/room/ethereum/ethereumjs.svg?style=flat-square)](https://gitter.im/ethereum/ethereumjs)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-Implements Ethereum's VM in Javascript.
+## 一.指令集
 
-#### Fork Support
+conflux rust： 在copy  Parity 代码的时候， 是已经兼容ethereum的几个重要的分叉，基本上是基于Istanbul 版本之后的copy， 即为ethereum Istanbul之前的 的evm 的opcode的指令集 都是支持的:
 
-The VM currently supports the following hardfork rules:
+- `Byzantium 指令集`
+- `Constantinople指令集`
+- `Petersburg指令集` (default)
+- `Istanbul（部分支持）指令集`
 
-- `Byzantium`
-- `Constantinople`
-- `Petersburg` (default)
-- `Istanbul`
-- `MuirGlacier` (only `mainnet` and `ropsten`)
+上述4个主要分叉都支持。未见支持MuirGlacier 分叉版本.
 
-If you are still looking for a [Spurious Dragon](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-607.md) compatible version of this library install the latest of the `2.2.x` series (see [Changelog](./CHANGELOG.md)).
+## 二.九类OPCode 异同：
 
-##### MuirGlacier Hardfork Support
+==注意： conflux Opcode 与ethereum go/js Opcode  每个的gas fee 几乎都不相同。注意对应修改==
 
-An Ethereum test suite compliant `MuirGlacier` HF implementation is available
-since the `v4.1.2` VM release. You can activate a `MuirGlacier` VM by using the
-`muirGlacier` `hardfork` option flag.
 
-##### Istanbul Harfork Support
 
-An Ethereum test suite compliant `Istanbul` HF implementation is available
-since the `v4.1.1` VM release. You can activate an `Istanbul` VM by using the
-`istanbul` `hardfork` option flag.
+| conflux Opcode                 |             | ethereum go/js opecode | conflux js evm版本是否修改 |
+| ------------------------------ | ----------- | ---------------------- | -------------------------- |
+| **一.arithmetic ops**          |             |                        |                            |
+| STOP                           | 0x00        |                        |                            |
+| ADD                            | 0x01        |                        |                            |
+| MUL                            | 0x02        |                        |                            |
+| SUB                            | 0x03        |                        |                            |
+| DIV                            | 0x04        |                        |                            |
+| SDIV                           | 0x05        |                        |                            |
+| MOD                            | 0x06        |                        |                            |
+| SMOD                           | 0x07        |                        |                            |
+| ADDMOD                         | 0x08        |                        |                            |
+| MULMOD                         | 0x09        |                        |                            |
+| EXP                            | 0x0a        |                        |                            |
+| SIGNEXTEND                     | 0x0b        |                        |                            |
+| **二.bit ops**                 |             |                        |                            |
+| LT                             | 0x10        |                        |                            |
+| GT                             | 0x11        |                        |                            |
+| SLT                            | 0x12        |                        |                            |
+| SGT                            | 0x13        |                        |                            |
+| EQ                             | 0x14        |                        |                            |
+| ISZERO                         | 0x15        |                        |                            |
+| AND                            | 0x16        |                        |                            |
+| OR                             | 0x17        |                        |                            |
+| XOR                            | 0x18        |                        |                            |
+| NOT                            | 0x19        |                        |                            |
+| BYTE                           | 0x1a        |                        |                            |
+| SHL                            | 0x1b        |                        |                            |
+| SHR                            | 0x1c        |                        |                            |
+| SAR                            | 0x1d        |                        |                            |
+| **三.crypto**                  |             |                        |                            |
+| SHA3                           | 0x20        |                        |                            |
+| **四.closure state**           |             |                        |                            |
+| ADDRESS                        | 0x30        |                        |                            |
+| BALANCE                        | 0x31        |                        |                            |
+| ORIGIN                         | 0x32        |                        |                            |
+| CALLER                         | 0x33        |                        |                            |
+| CALLVALUE                      | 0x34        |                        |                            |
+| CALLDATALOAD                   | 0x35        |                        |                            |
+| CALLDATASIZE                   | 0x36        |                        |                            |
+| CALLDATACOPY                   | 0x37        |                        |                            |
+| CODESIZE                       | 0x38        |                        |                            |
+| CODECOPY                       | 0x39        |                        |                            |
+| GASPRICE                       | 0x3a        |                        |                            |
+| EXTCODESIZE                    | 0x3b        |                        |                            |
+| EXTCODECOPY                    | 0x3c        |                        |                            |
+| RETURNDATASIZE                 | 0x3d        |                        |                            |
+| RETURNDATACOPY                 | 0x3e        |                        |                            |
+| EXTCODEHASH                    | 0x3f        |                        |                            |
+| **五. block operations**       |             |                        |                            |
+| BLOCKHASH                      | 0x40        |                        |                            |
+| COINBASE                       | 0x41        |                        |                            |
+| TIMESTAMP                      | 0x42        |                        |                            |
+| NUMBER                         | 0x43        |                        | 需要修改behavior           |
+| DIFFICULTY                     | 0x44        |                        |                            |
+| GASLIMIT                       | 0x45        |                        |                            |
+|                                | ==0x46==    | ==CHAINID==            | 删掉                       |
+|                                | ==0x47==    | ==SELFBALANCE==        | 删掉                       |
+| **六.'storage' and execution** |             |                        |                            |
+| POP                            | 0x50        |                        |                            |
+| MLOAD                          | 0x51        |                        |                            |
+| MSTORE                         | 0x52        |                        |                            |
+| MSTORE8                        | 0x53        |                        |                            |
+| SLOAD                          | 0x54        |                        |                            |
+| SSTORE                         | 0x55        |                        |                            |
+| JUMP                           | 0x56        |                        |                            |
+| JUMPI                          | 0x57        |                        |                            |
+| PC                             | 0x58        |                        |                            |
+| MSIZE                          | 0x59        |                        |                            |
+| GAS                            | 0x5a        |                        |                            |
+| JUMPDEST                       | 0x5b        |                        |                            |
+| **七.**                        |             |                        |                            |
+| PUSH1 ~ PUSH32                 | 0x60~ 0x7f  |                        |                            |
+| DUP1 ~ DUP16                   | 0x80~0x8f   |                        |                            |
+| SWAP1 ~ SWAP16                 | 0x90 ~ 0x9f |                        |                            |
+| LOG0 ~ LOG4                    | 0xa0 ~ 0xa4 |                        |                            |
+| **八.closures **               |             |                        |                            |
+| CREATE                         | 0xf0        |                        |                            |
+| CALL                           | 0xf1        |                        |                            |
+| CALLCODE                       | 0xf2        |                        |                            |
+| RETURN                         | 0xf3        |                        |                            |
+| DELEGATECALL                   | 0xf4        |                        |                            |
+| CREATE2                        | 0xf5        |                        |                            |
+| REVERT                         | 0xfd        |                        |                            |
+| STATICCALL                     | 0xfa        |                        |                            |
+| 九.other                       |             |                        |                            |
+| ==SUICIDE==                    | ==0xff==    | ==SELFDESTRUCT==       | 修改名称                   |
+|                                | ==0xfe==    | ==INVALID==            | 删掉                       |
 
-Supported `Istanbul` EIPs:
 
-- [EIP-152](https://github.com/ethereum/EIPs/pull/2129): Blake 2b `F` precompile,
-  PR [#584](https://github.com/ethereumjs/ethereumjs-vm/pull/584)
-- [EIP-1108](https://eips.ethereum.org/EIPS/eip-1108): Reduce `alt_bn128`
-  precompile gas costs,  
-  PR [#540](https://github.com/ethereumjs/ethereumjs-vm/pull/540)
-  (already released in `v4.0.0`)
-- [EIP-1344](https://eips.ethereum.org/EIPS/eip-1344): Add ChainID Opcode,
-  PR [#572](https://github.com/ethereumjs/ethereumjs-vm/pull/572)
-- [EIP-1884](https://eips.ethereum.org/EIPS/eip-1884): Trie-size-dependent
-  Opcode Repricing,
-  PR [#581](https://github.com/ethereumjs/ethereumjs-vm/pull/581)
-- [EIP-2200](https://github.com/ethereum/EIPs/pull/2200): Rebalance net-metered
-  SSTORE gas costs,
-  PR [#590](https://github.com/ethereumjs/ethereumjs-vm/pull/590)
 
-# INSTALL
+## 三. OpCode's behavior:
 
-`npm install ethereumjs-vm`
+以BlockNumber为例子：
 
-# USAGE
+#### 1.conflux  behavior:
 
-```javascript
-const BN = require('bn.js')
-var VM = require('ethereumjs-vm').default
+![image-20200210220130928](/Users/liping/Library/Application Support/typora-user-images/image-20200210220130928.png)
 
-// Create a new VM instance
-// For explicity setting the HF use e.g. `new VM({ hardfork: 'petersburg' })`
-const vm = new VM()
+![image-20200210220239279](/Users/liping/Library/Application Support/typora-user-images/image-20200210220239279.png)
 
-const STOP = '00'
-const ADD = '01'
-const PUSH1 = '60'
 
-// Note that numbers added are hex values, so '20' would be '32' as decimal e.g.
-const code = [PUSH1, '03', PUSH1, '05', ADD, STOP]
 
-vm.on('step', function(data) {
-  console.log(`Opcode: ${data.opcode.name}\tStack: ${data.stack}`)
-})
+![image-20200210220718926](/Users/liping/Library/Application Support/typora-user-images/image-20200210220718926.png)
 
-vm.runCode({
-  code: Buffer.from(code.join(''), 'hex'),
-  gasLimit: new BN(0xffff),
-})
-  .then(results => {
-    console.log('Returned : ' + results.returnValue.toString('hex'))
-    console.log('gasUsed  : ' + results.gasUsed.toString())
-  })
-  .catch(err => console.log('Error    : ' + err))
-```
+![image-20200210220830106](/Users/liping/Library/Application Support/typora-user-images/image-20200210220830106.png)
 
-## Example
+![image-20200210220858181](/Users/liping/Library/Application Support/typora-user-images/image-20200210220858181.png)
 
-This projects contain the following examples:
+ethereumjs  evm 是一个独立的项目，并没有相关的VM 实例化和generate block 的代码，需要回调，ethereumjs-block 项目。在其产生实例化，
 
-1. [./examples/run-blockchain](./examples/run-blockchain): Loads tests data, including accounts and blocks, and runs all of them in the VM.
-1. [./examples/run-code-browser](./examples/run-code-browser): Show how to use this library in a browser.
-1. [./examples/run-solidity-contract](./examples/run-solidity-contract): Compiles a Solidity contract, and calls constant and non-constant functions.
-1. [./examples/run-transactions-complete](./examples/run-transactions-complete): Runs a contract-deployment transaction and then calls one of its functions.
-1. [./examples/decode-opcodes](./examples/decode-opcodes): Decodes a binary EVM program into its opcodes.
+#### 2.ethereumjs evm behavior:
 
-All of the examples have their own `README.md` explaining how to run them.
+![image-20200211015224561](/Users/liping/Library/Application Support/typora-user-images/image-20200211015224561.png)
 
-# BROWSER
 
-To build for standalone use in the browser, install `browserify` and check [run-transactions-simple example](https://github.com/ethereumjs/ethereumjs-vm/tree/master/examples/run-transactions-simple). This will give you a global variable `EthVM` to use. The generated file will be at `./examples/run-transactions-simple/build.js`.
 
-# API
+![image-20200211015234161](/Users/liping/Library/Application Support/typora-user-images/image-20200211015234161.png)
 
-## VM
+![image-20200211015343434](/Users/liping/Library/Application Support/typora-user-images/image-20200211015343434.png)
 
-For documentation on `VM` instantiation, exposed API and emitted `events` see generated [API docs](./docs/README.md).
 
-## StateManger
 
-The API for the `StateManager` is currently in `Beta`, separate documentation can be found [here](./docs/classes/statemanager.md), see also [release notes](https://github.com/ethereumjs/ethereumjs-vm/releases/tag/v2.5.0) from the `v2.5.0` VM release for details on the `StateManager` rewrite.
 
-# Internal Structure
 
-The VM processes state changes at many levels.
+![image-20200211015737123](/Users/liping/Library/Application Support/typora-user-images/image-20200211015737123.png)
 
-- **runBlockchain**
-  - for every block, runBlock
-- **runBlock**
-  - for every tx, runTx
-  - pay miner and uncles
-- **runTx**
-  - check sender balance
-  - check sender nonce
-  - runCall
-  - transfer gas charges
-- **runCall**
-  - checkpoint state
-  - transfer value
-  - load code
-  - runCode
-  - materialize created contracts
-  - revert or commit checkpoint
-- **runCode**
-  - iterate over code
-  - run op codes
-  - track gas usage
-- **OpFns**
-  - run individual op code
-  - modify stack
-  - modify memory
-  - calculate fee
 
-The opFns for `CREATE`, `CALL`, and `CALLCODE` call back up to `runCall`.
 
-## VM's tracing events
+#### 3.js 版本的使用实例：
 
-You can subscribe to the following events of the VM:
+![image-20200211020154394](/Users/liping/Library/Application Support/typora-user-images/image-20200211020154394.png)
 
-- `beforeBlock`: Emits a `Block` right before running it.
-- `afterBlock`: Emits `RunBlockResult` right after running a block.
-- `beforeTx`: Emits a `Transaction` right before running it.
-- `afterTx`: Emits a `RunTxResult` right after running a transaction.
-- `beforeMessage`: Emits a `Message` right after running it.
-- `afterMessage`: Emits an `EVMResult` right after running a message.
-- `step`: Emits an `InterpreterStep` right before running an EVM step.
-- `newContract`: Emits a `NewContractEvent` right before creating a contract. This event contains the deployment code, not the deployed code, as the creation message may not return such a code.
+4. #### go ethereum的behavior
 
-### Asynchronous event handlers
-
-You can perform asynchronous operations from within an event handler
-and prevent the VM to keep running until they finish.
-
-In order to do that, your event handler has to accept two arguments.
-The first one will be the event object, and the second one a function.
-The VM won't continue until you call this function.
-
-If an exception is passed to that function, or thrown from within the
-handler or a function called by it, the exception will bubble into the
-VM and interrupt it, possibly corrupting its state. It's strongly
-recommended not to do that.
-
-### Synchronous event handlers
-
-If you want to perform synchronous operations, you don't need
-to receive a function as the handler's second argument, nor call it.
-
-Note that if your event handler receives multiple arguments, the second
-one will be the continuation function, and it must be called.
-
-If an exception is thrown from withing the handler or a function called
-by it, the exception will bubble into the VM and interrupt it, possibly
-corrupting its state. It's strongly recommended not to throw from withing
-event handlers.
-
-# DEVELOPMENT
-
-Developer documentation - currently mainly with information on testing and debugging - can be found [here](./developer.md).
-
-# EthereumJS
-
-See our organizational [documentation](https://ethereumjs.readthedocs.io) for an introduction to `EthereumJS` as well as information on current standards and best practices.
-
-If you want to join for work or do improvements on the libraries have a look at our [contribution guidelines](https://ethereumjs.readthedocs.io/en/latest/contributing.html).
-
-# LICENSE
-
-[MPL-2.0](https://www.mozilla.org/MPL/2.0/)
+![image-20200210192358507](/Users/liping/Library/Application Support/typora-user-images/image-20200210192358507.png)
