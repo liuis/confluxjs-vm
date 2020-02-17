@@ -1,23 +1,24 @@
-#### Fork Support
+# Fork Support
 
 The VM currently supports the following hardfork rules:
 
 - `Byzantium`
 - `Constantinople`
 - `Petersburg` (default)
-- `Istanbul`
-- `MuirGlacier` (only `mainnet` and `ropsten`)
+- `Istanbul` 
 
-If you are still looking for a [Spurious Dragon](https://eips.ethereum.org/EIPS/eip-607) compatible version of this library install the latest of the `2.2.x` series (see [Changelog](./CHANGELOG.md)).
+##### OpCode Not Support 
 
-##### MuirGlacier Hardfork Support
 
-An Ethereum test suite compliant `MuirGlacier` HF implementation is available
-since the `v4.1.3` VM release. You can activate a `MuirGlacier` VM by using the
-`muirGlacier` `hardfork` option flag.
+0x46  CHAINID  (not support)
 
-**Note:** The original `v4.1.2` release contains a critical bug preventing the
-`MuirGlacier` VM to work properly and there is the need to update.
+0x47  SELFBALANCE  (not support)
+
+0xff  SELFDESTRUCT  ==> SUICIDE (change name) 
+
+0xfe  INVALID  (not support)
+
+MuirGlacier Hardfork Not Support
 
 ##### Istanbul Harfork Support
 
@@ -44,13 +45,28 @@ Supported `Istanbul` EIPs:
 
 # INSTALL
 
-`npm install ethereumjs-vm`
+`npm install confluxjs-vm`
 
 # USAGE
 
 ```javascript
+/*
+ * 
+ * output:
+    Opcode: PUSH1	Stack:
+    Opcode: PUSH1	Stack: 3
+    Opcode: ADD	Stack: 3,5
+    Opcode: STOP	Stack: 8
+    Returned :
+    gasUsed  : 9
+ * 
+ * 
+ * 
+ * 
+*/
+
 const BN = require('bn.js')
-var VM = require('ethereumjs-vm').default
+var VM = require('../dist/index.js').default
 
 // Create a new VM instance
 // For explicity setting the HF use e.g. `new VM({ hardfork: 'petersburg' })`
@@ -177,16 +193,3 @@ by it, the exception will bubble into the VM and interrupt it, possibly
 corrupting its state. It's strongly recommended not to throw from withing
 event handlers.
 
-# DEVELOPMENT
-
-Developer documentation - currently mainly with information on testing and debugging - can be found [here](./developer.md).
-
-# EthereumJS
-
-See our organizational [documentation](https://ethereumjs.readthedocs.io) for an introduction to `EthereumJS` as well as information on current standards and best practices.
-
-If you want to join for work or do improvements on the libraries have a look at our [contribution guidelines](https://ethereumjs.readthedocs.io/en/latest/contributing.html).
-
-# LICENSE
-
-[MPL-2.0](https://www.mozilla.org/MPL/2.0/)
