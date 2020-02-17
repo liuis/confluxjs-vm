@@ -7,20 +7,20 @@ The VM currently supports the following hardfork rules:
 - `Petersburg` (default)
 - `Istanbul` 
 
-##### OpCode Not Support 
+## OpCode Not Support 
 
 
-0x46  CHAINID  (not support)
+`0x46  CHAINID`  (not support)
 
-0x47  SELFBALANCE  (not support)
+`0x47  SELFBALANCE`  (not support)
 
-0xff  SELFDESTRUCT  ==> SUICIDE (change name) 
+`0xff  SELFDESTRUCT  ==> SUICIDE` (change name) 
 
-0xfe  INVALID  (not support)
+`0xfe  INVALID`  (not support)
 
-MuirGlacier Hardfork Not Support
+`MuirGlacier Hardfork Not Support`
 
-##### Istanbul Harfork Support
+## Istanbul Harfork Support
 
 An Ethereum test suite compliant `Istanbul` HF implementation is available
 since the `v4.1.1` VM release. You can activate an `Istanbul` VM by using the
