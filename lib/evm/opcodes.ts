@@ -168,14 +168,18 @@ const opcodes: OpcodeList = {
   0xfd: { name: 'REVERT', fee: 0, isAsync: false },
 
   // '0x70', range - other
-  0xfe: { name: 'INVALID', fee: 0, isAsync: false },
-  0xff: { name: 'SELFDESTRUCT', fee: 5000, isAsync: true },
+  //conflux node evm not supported this opcode
+  //0xfe: { name: 'INVALID', fee: 0, isAsync: false },
+  //0xff: { name: 'SELFDESTRUCT', fee: 5000, isAsync: true },
+  //conflux node evm change this opcode name, SELFDESTRUCT ==> SUICIDE
+  0xff: { name: 'SUICIDE', fee: 5000, isAsync: true },
 }
 
 const istanbulOpcodes: OpcodeList = {
   0x31: { name: 'BALANCE', fee: 700, isAsync: true },
-  0x3f: { name: 'EXTCODEHASH', fee: 700, isAsync: true },
-  0x46: { name: 'CHAINID', fee: 2, isAsync: false },
+  // conflux node evm not supported this opcode
+  //0x3f: { name: 'EXTCODEHASH', fee: 700, isAsync: true },
+  //0x46: { name: 'CHAINID', fee: 2, isAsync: false },
   0x47: { name: 'SELFBALANCE', fee: 5, isAsync: false },
   0x54: { name: 'SLOAD', fee: 800, isAsync: true },
 }
