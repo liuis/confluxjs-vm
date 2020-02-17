@@ -1,14 +1,14 @@
 {
-  "name": "ethereumjs-vm",
-  "version": "4.1.2",
-  "description": "An Ethereum VM implementation",
+  "name": "confluxjs-vm",
+  "version": "0.0.1",
+  "description": "An Conflux VM implementation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
   "scripts": {
-    "build:dist": "ethereumjs-config-build",
+    "build:dist": "confluxjs-config-build",
     "prepublishOnly": "npm run lint && npm run build:dist && npm run testBuildIntegrity",
     "coverage": "nyc npm run coverageTests && nyc report --reporter=text-lcov > .nyc_output/lcov.info",
     "coverageTests": "npm run build:dist && tape './tests/api/**/*.js' ./tests/tester.js -s --dist",
@@ -26,14 +26,14 @@
     "testAPI": "npm run build:dist && tape './tests/api/**/*.js'",
     "testAPI:browser": "npm run build:dist && karma start karma.conf.js",
     "test": "echo \"[INFO] Generic test cmd not used. See package.json for more specific test run cmds.\"",
-    "tslint": "ethereumjs-config-tslint",
-    "tslint:fix": "ethereumjs-config-tslint-fix",
-    "lint": "ethereumjs-config-lint",
-    "lint:fix": "ethereumjs-config-lint-fix",
-    "format": "ethereumjs-config-format",
-    "format:fix": "ethereumjs-config-format-fix",
+    "tslint": "confluxjs-config-tslint",
+    "tslint:fix": "confluxjs-config-tslint-fix",
+    "lint": "confluxjs-config-lint",
+    "lint:fix": "confluxjs-config-lint-fix",
+    "format": "confluxjs-config-format",
+    "format:fix": "confluxjs-config-format-fix",
     "formatTest": "node ./scripts/formatTest",
-    "tsc": "ethereumjs-config-tsc"
+    "tsc": "confluxjs-config-tsc"
   },
   "husky": {
     "hooks": {
@@ -42,10 +42,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethereumjs/ethereumjs-vm.git"
+    "url": "git+https://github.com/confluxjs/confluxjs-vm.git"
   },
   "keywords": [
-    "ethereum",
+    "conflux",
     "VM"
   ],
   "dependencies": {
@@ -107,9 +107,9 @@
   ],
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/ethereumjs/ethereumjs-vm/issues"
+    "url": "https://github.com/liuis/confluxjs-vm/issues"
   },
-  "homepage": "https://github.com/ethereumjs/ethereumjs-vm",
+  "homepage": "https://github.com/liuis/confluxjs-vm",
   "nyc": {
     "exclude": [
       "tests"
