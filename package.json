@@ -37,7 +37,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint",
       "commit-msg": "commitlint -e $GIT_PARAMS"
     }
   },
