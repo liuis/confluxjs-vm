@@ -16,7 +16,7 @@ The VM currently supports the following hardfork rules:
 
 `0xff  SELFDESTRUCT  ==> SUICIDE` (change name) 
 
-** The SELFDESTRUCT instruction is not immediate, instead the contract is set in a disabled state where neither new contracts nor call transactions can call the contract directly. When all other contracts referring to a disabled contract are fully disabled the contract is disabled. **
+#### The SELFDESTRUCT instruction is not immediate, instead the contract is set in a disabled state where neither new contracts nor call transactions can call the contract directly. When all other contracts referring to a disabled contract are fully disabled the contract is disabled. 
 
 `0xfe  INVALID`  (not support)
 
