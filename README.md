@@ -36,7 +36,7 @@ Supported `Istanbul` EIPs:
   precompile gas costs,  
   PR [#540](https://github.com/ethereumjs/ethereumjs-vm/pull/540)
   (already released in `v4.0.0`)
-- [EIP-1344](https://eips.ethereum.org/EIPS/eip-1344): Add ChainID Opcode,
+- ~~[EIP-1344](https://eips.ethereum.org/EIPS/eip-1344): Add ChainID Opcode,~~
   PR [#572](https://github.com/ethereumjs/ethereumjs-vm/pull/572)
 - [EIP-1884](https://eips.ethereum.org/EIPS/eip-1884): Trie-size-dependent
   Opcode Repricing,
