@@ -4,7 +4,7 @@ The VM currently supports the following hardfork rules:
 
 - `Byzantium`
 - `Constantinople`
-- `Petersburg` (default)
+- `Petersburg`
 - `Istanbul` 
 
 ## OpCode Not Support 
@@ -22,7 +22,7 @@ The VM currently supports the following hardfork rules:
 
 `MuirGlacier Hardfork Not Support`
 
-## Istanbul Harfork Support
+## Istanbul Harfork Support (dont't use the hardfork option flag, use the default)
 
 An Ethereum test suite compliant `Istanbul` HF implementation is available
 since the `v4.1.1` VM release. You can activate an `Istanbul` VM by using the
